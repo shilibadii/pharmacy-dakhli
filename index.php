@@ -34,9 +34,9 @@ ob_start();
                                         <h1 class="heading mb0">WITH
                                             <span class="animationtext clip">
                                                 <span class="cd-words-wrapper">
-                                                    <span class="item-text is-visible">BINABOX</span>
-                                                    <span class="item-text is-hidden">BINABOX</span>
-                                                    <span class="item-text is-hidden">BINABOX</span>
+                                                    <span class="item-text is-visible">PHARMACY</span>
+                                                    <span class="item-text is-hidden">PHARMACY</span>
+                                                    <span class="item-text is-hidden">PHARMACY</span>
                                                 </span>
                                             </span>
                                         </h1>
@@ -132,28 +132,28 @@ ob_start();
 <section class="logo-slider">
     <div class="logo-slider-wrap">
         <div class="logo-slider-inner">
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
         </div>
         <div class="logo-slider-inner style-2">
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
-            <h3>BINABOX</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
+            <h3>PHARMACY</h3>
         </div>
     </div>
 </section>
@@ -209,10 +209,7 @@ ob_start();
 
                 <div class="tf-heading wow fadeInUp">
                     <h2 class="heading">ABOUT US</h2>
-                    <p class="sub-heading">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                        eu fugiat nulla pariatur. Excepteur sint occae cat cupidatat non proident, sunt in culpa qui
-                        officia dese runt mollit anim id est laborum velit esse cillum dolore eu fugiat nulla pariatu
-                        epteur sint occaecat</p>
+                    <p class="sub-heading">Welcome to our Pharmacy, your trusted neighborhood pharmacy serving the community for over 20 years. We are dedicated to providing high-quality healthcare services and personalized care to our valued customers</p>
                 </div>
 
                 <div class="counter-wrap wow fadeInUp" data-wow-delay="0.2s">

@@ -21,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $brand = $_POST['brand'];
     $status = $_POST['status'];
     $price = $_POST['price'];
-  
+    $tags = $_POST['tags'];
+    
+
     // Upload the image file
     $target_dir = "uploads/";
 
@@ -68,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($uploadOk == 1) {
               if (move_uploaded_file($image["tmp_name"], $target_file)) {
                 // Insert the product into the database
-                $stmt = $pdo->prepare('INSERT INTO products (name, brand, price, status, img) VALUES (?, ?, ?, ?, ?)');
-                $stmt->execute([$name, $brand, $price, $status, $target_file]);
+                $stmt = $pdo->prepare('INSERT INTO products (name, brand, price, status, img,tags) VALUES (?, ?, ?, ?, ?, ?)');
+                $stmt->execute([$name, $brand, $price, $status, $target_file,$tags]);
           
                 // Redirect to the product list page
                 $message="Medecin added successfully";
@@ -206,6 +208,7 @@ if (isset($message)) {
                                     <fieldset> <input  name="brand" tabindex="2" aria-required="true"  type="text" placeholder="Brand" required=""></fieldset>
                                     <fieldset> <input  name="price" tabindex="2" aria-required="true"  type="text" placeholder="Price" required=""></fieldset>
                                     <fieldset> <input  name="status" tabindex="2" aria-required="true"  type="text" placeholder="Status" required=""></fieldset>
+                                    <fieldset> <input  name="tags" tabindex="2" aria-required="true"  type="text" placeholder="Tags seperated by ," required=""></fieldset>
                     
                                     <fieldset style="background-color: #20262b;padding:0 25px"> <input style="width:100%"  name="image" tabindex="2" aria-required="true"  type="file" placeholder="Status" required=""></fieldset>
                                     <button class="tf-button submit" type="submit">ADD</button>

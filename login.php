@@ -202,7 +202,7 @@ ob_start();
                                 <span class="btn-checkbox"></span>
                                 Remember me
                             </label>
-                            <a href="#">Forgot your password?</a>
+                
                         </div>
                         <button class="tf-button submit" type="submit">SIGN IN</button>
                     </form>

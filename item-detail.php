@@ -80,9 +80,14 @@ include 'navbar.php'; ?>
                                 <div class="price">
                                     <span class="heading">PRICE:</span>
                                     <span>'.$product['price'].'</span>
-                                </div>
-                               
-                            </div>
+                                </div>';
+                                if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                                  echo  '<div class="group-btn">
+                                <a href="delete.php?id='.$product['id'].'" class="tf-button opensea"> DELETE</a>
+                             
+                                </div>';
+                                }
+                            echo '</div>
                         </div>
                    </div>
                 </div>

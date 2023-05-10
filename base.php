@@ -47,16 +47,9 @@
                             <div class="col-md-12">
                                 <div class="bottom">
                                    
-                                    <p class="copy-right">BINABOX 2022 - ALL rights reserved</p>
+                                    <p class="copy-right">Pharmacy 2023 - ALL rights reserved</p>
     
-                                    <ul class="social-item">
-                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-telegram-plane"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-youtube"></i></a></li>
-                                        <li><a href="#"><i class="icon-fl-tik-tok-2"></i></a></li>
-                                        <li><a href="#"><i class="icon-fl-vt"></i></a></li>
-                                    </ul>
+                                    
                                 </div>
                             </div>
                         </div>
