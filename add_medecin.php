@@ -1,5 +1,5 @@
 <?php
-
+include 'connexion.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -14,7 +14,7 @@ $type="";
 // Check if the form was submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Connect to the database
-    $pdo = new PDO('mysql:host=localhost;dbname=pharmacy', 'root', '');
+    
   
     // Get the form data
     $name = $_POST['name'];
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   
     // Check file size
-    if ($image["size"] > 500000) {
+    if ($image["size"] > 4000000) {
       $uploadOk = 0;
       $message="Error file size is too large";
       $type="error";
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   
     // Allow certain file formats
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-    && $imageFileType != "gif" ) {
+    && $imageFileType != "gif" && $imageFileType != "webp" ) {
       $uploadOk = 0;
       $message="Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
       $type="error";
@@ -98,28 +98,21 @@ ob_start();
                         <div class="content-left vertical-carousel">
                     <div class="content-slide">
                         <?php
-                        // Connect to the database
-                        $db_host = 'localhost';
-                        $db_user = 'root';
-                        $db_pass = '';
-                        $db_name = 'pharmacy';
-                        $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-
+                        
+                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                
                         // Query the database for products
                         $sql = "SELECT * FROM products ORDER BY RAND() LIMIT 10";
-                        $result = mysqli_query($conn, $sql);
-
+                        $stmt = $pdo->query($sql);
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
                         // Display the products
-                        
-
-
-                        if (mysqli_num_rows($result) > 0) {
-                            $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                        if ($stmt->rowCount() > 0) {
                             echo '<div class="swiper-container swiper mySwiper swiper-h">
-                                                    <div class="swiper-wrapper">
-                                                      <div class="swiper-slide">
-                                                        <div class="swiper mySwiper1 swiper-v">
-                                                          <div class="swiper-wrapper sl-h" >';
+                                    <div class="swiper-wrapper">
+                                      <div class="swiper-slide">
+                                        <div class="swiper mySwiper1 swiper-v">
+                                          <div class="swiper-wrapper sl-h" >';
                             foreach ($result as $row) {
                                 
                                 echo '<div class="swiper-slide" data-swiper-autoplay="1000">
@@ -189,7 +182,7 @@ ob_start();
                             echo 'No products found.';
                         }
                         // Close the database connection
-                        mysqli_close($conn);
+                        $pdo=null;
                         ?>
                         </div>
                 </div>

@@ -1,76 +1,62 @@
 <?php
 session_start();
+include 'connexion.php';
 // If the user visits the login page and is already logged in, redirect to the home page
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     header('Location: index.php');
     exit;
 }
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($_POST['password'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Connect to the database
-    $db_host = 'localhost';
-    $db_user = 'root';
-    $db_pass = '';
-    $db_name = 'pharmacy';
-    $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-    $error = '';
-    // Validate credentials
 
-    // Prepare a select statement
-    $sql = "SELECT id, username, password FROM users WHERE username = ?";
 
-    if ($stmt = mysqli_prepare($conn, $sql)) {
-        // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "s", $param_username);
+    try {
 
-        // Set parameters
-        $param_username = $username;
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Attempt to execute the prepared statement
-        if (mysqli_stmt_execute($stmt)) {
-            // Store result
-            mysqli_stmt_store_result($stmt);
+        $error = '';
 
-            // Check if username exists, if yes then verify password
-            if (mysqli_stmt_num_rows($stmt) == 1) {
-                // Bind result variables
-                mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                if (mysqli_stmt_fetch($stmt)) {
-                    if (password_verify($password, $hashed_password)) {
-                        // Password is correct, so start a new session
-                        session_start();
+        // Prepare a select statement
+        $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE username = :username");
 
-                        // Store data in session variables
-                        $_SESSION["loggedin"] = true;
-                        $_SESSION["id"] = $id;
-                        $_SESSION["username"] = $username;
+        // Bind parameter
+        $stmt->bindParam(':username', $username);
 
-                        // Redirect user to welcome page
-                        header("location: index.php");
-                    } else {
-                        // Password is not valid, display a generic error message
-                        $error = "Invalid username or password.";
-                    }
-                }
-            } else {
-                // Username doesn't exist, display a generic error message
-                $error = "Invalid username or password.";
-            }
+        // Execute the prepared statement
+        $stmt->execute();
+
+        // Fetch the result
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Check if username exists and verify the password
+        if ($user && password_verify($password, $user['password'])) {
+            // Password is correct, so start a new session
+            session_start();
+
+            // Store data in session variables
+            $_SESSION["loggedin"] = true;
+            $_SESSION["id"] = $user['id'];
+            $_SESSION["username"] = $user['username'];
+
+            // Redirect user to welcome page
+            header("location: index.php");
+            exit;
         } else {
-            $error = "Oops! Something went wrong. Please try again later.";
+            // Invalid username or password
+            $error = "Invalid username or password.";
         }
 
-        // Close statement
-        mysqli_stmt_close($stmt);
+    } catch (PDOException $e) {
+        // Handle database connection or query errors
+        $error = "Oops! Something went wrong. Please try again later.";
+        echo "An error occurred: " . $e->getMessage();
     }
 
-
-    // Close connection
-    mysqli_close($conn);
-
-
+    // Close the database connection
+    $pdo = null;
 }
 ?>
 <?php
@@ -86,23 +72,15 @@ ob_start();
                 <div class="content-left vertical-carousel">
                     <div class="content-slide">
                         <?php
-                        // Connect to the database
-                        $db_host = 'localhost';
-                        $db_user = 'root';
-                        $db_pass = '';
-                        $db_name = 'pharmacy';
-                        $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-
+                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                
                         // Query the database for products
                         $sql = "SELECT * FROM products ORDER BY RAND() LIMIT 10";
-                        $result = mysqli_query($conn, $sql);
-
+                        $stmt = $pdo->query($sql);
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
                         // Display the products
-                        
-
-
-                        if (mysqli_num_rows($result) > 0) {
-                            $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                        if ($stmt->rowCount() > 0) {
                             echo '<div class="swiper-container swiper mySwiper swiper-h">
                                                     <div class="swiper-wrapper">
                                                       <div class="swiper-slide">
@@ -177,7 +155,7 @@ ob_start();
                             echo 'No products found.';
                         }
                         // Close the database connection
-                        mysqli_close($conn);
+                        $pdo=null;
                         ?>
                         </div>
                 </div>

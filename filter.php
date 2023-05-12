@@ -1,5 +1,5 @@
 <?php
-$pdo = new PDO('mysql:host=localhost;dbname=pharmacy', 'root', '');
+include 'connexion.php';
 // Get the selected filters from the POST request
 $brands = $_POST['brands'];
 $brands = json_decode($brands);

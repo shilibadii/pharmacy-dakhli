@@ -1,23 +1,32 @@
 <?php
 $title = "Home";
-// Connect to database
-$mysqli = new mysqli("localhost", "root", "", "pharmacy");
+include 'connexion.php';
+try {
+ 
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Query to count number of rows in products table
-$total_prods = $mysqli->query("SELECT COUNT(*) as total FROM products");
-$total_brands=$mysqli->query("SELECT COUNT(DISTINCT brand) AS num_brands FROM products");
-// Get total number of products
-if ($total_prods->num_rows > 0) {
-    $row = $total_prods->fetch_assoc();
-    $total_products = $row['total'];
+    // Query to count number of rows in products table
+    $total_prods_query = "SELECT COUNT(*) AS total FROM products";
+    $total_prods_stmt = $pdo->query($total_prods_query);
+    $total_prods_result = $total_prods_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Get total number of products
+    $total_products = $total_prods_result['total'];
+
+    // Query to count number of distinct brands in products table
+    $total_brands_query = "SELECT COUNT(DISTINCT brand) AS num_brands FROM products";
+    $total_brands_stmt = $pdo->query($total_brands_query);
+    $total_brands_result = $total_brands_stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Get total number of brands
+    $total_brand_num = $total_brands_result['num_brands'];
+
+} catch (PDOException $e) {
+    // Handle database connection or query errors
+    echo "An error occurred: " . $e->getMessage();
 }
-// Get total number of brands
-if ($total_brands->num_rows > 0) {
-    $row = $total_brands->fetch_assoc();
-    $total_brand_num = $row['num_brands'];
-}
-// Close database connection
-$mysqli->close();
+
+
 ob_start();
 ?>
 <?php include 'navbar.php'; ?>
@@ -52,23 +61,19 @@ ob_start();
                                     <div style="width:700px" class="content-right ">
                                         <div class="content-slide">
                                             <?php
-                                            // Connect to the database
-                                            $db_host = 'localhost';
-                                            $db_user = 'root';
-                                            $db_pass = '';
-                                            $db_name = 'pharmacy';
-                                            $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+                                            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                                             // Query the database for products
                                             $sql = "SELECT * FROM products ORDER BY RAND() LIMIT 10";
-                                            $result = mysqli_query($conn, $sql);
+                                            $stmt = $pdo->query($sql);
+                                            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                             // Display the products
                                             
 
 
-                                            if (mysqli_num_rows($result) > 0) {
-                                                    $result= mysqli_fetch_all($result, MYSQLI_ASSOC);
+                                            if ($stmt->rowCount() > 0) {
+                                                   
                                                     echo '<div class="swiper swiper-slider swiper-v mr25">';
                                                     echo '<div class="swiper-wrapper sl-h">';
                                                     foreach ($result as $row)  {
@@ -109,8 +114,7 @@ ob_start();
                                             } else {
                                                 echo 'No products found.';
                                             }
-                                            // Close the database connection
-                                            mysqli_close($conn);
+                                           
                                             ?>
                                         </div>
                                     </div>
@@ -233,16 +237,12 @@ ob_start();
     </div>
 </section>
 <?php
-                        // Connect to the database
-                        $db_host = 'localhost';
-                        $db_user = 'root';
-                        $db_pass = '';
-                        $db_name = 'pharmacy';
-                        $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+                        
 
                         // Query the database for products
                         $sql = "SELECT * FROM products ORDER BY RAND() LIMIT 10";
-                        $result = mysqli_query($conn, $sql);
+                        $stmt = $pdo->query($sql);
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         ?>
 <section class=" tf-collection ">
     <div class="tf-container">
@@ -256,8 +256,8 @@ ob_start();
                         
 
 
-                        if (mysqli_num_rows($result) > 0) {
-                            $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                        if ($stmt->rowCount() > 0) {
+                           
                             foreach ($result as $row) {
           
                            echo '<div class="swiper-slide">
@@ -322,7 +322,7 @@ ob_start();
 </section>
 <?php
 // Close the database connection
-mysqli_close($conn);
+$pdo=null;
 $content = ob_get_clean();
 include 'base.php';
 ?>

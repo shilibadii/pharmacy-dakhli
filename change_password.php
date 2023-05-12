@@ -1,5 +1,5 @@
 <?php
-
+include 'connexion.php';
 
     session_start();
 
@@ -15,46 +15,44 @@ $type = "";
 // Check if the form was submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['oldpassword']) && isset($_POST['password']) && isset($_POST['password2'])) {
 
-    // Connect to the database
-    $db_host = 'localhost';
-    $db_user = 'root';
-    $db_pass = '';
-    $db_name = 'pharmacy';
-    $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $current_password = $_POST['oldpassword'];
-    $new_password = $_POST['password'];
-    $confirm_password = $_POST['password2'];
-    
-    $user_id = ($_SESSION['id']);
+        $current_password = $_POST['oldpassword'];
+        $new_password = $_POST['password'];
+        $confirm_password = $_POST['password2'];
 
-    $sql = "SELECT * FROM users WHERE id='$user_id'";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    if (password_verify($current_password, $row['password'])) {
-        // Current password matches, check if new password and confirm password match
-        if ($new_password == $confirm_password) {
-            // Update password in database
-            $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
-            $update_sql = "UPDATE users SET password='$new_password_hash' WHERE id='$user_id'";
-            mysqli_query($conn, $update_sql);
+        $user_id = ($_SESSION['id']);
 
+        $sql = "SELECT * FROM users WHERE id=:user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
 
-            $type = "success";
-            $msg = "Password Changed successfully";
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (password_verify($current_password, $row['password'])) {
+            // Current password matches, check if new password and confirm password match
+            if ($new_password == $confirm_password) {
+                // Update password in database
+                $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+                $update_sql = "UPDATE users SET password=:new_password WHERE id=:user_id";
+                $update_stmt = $pdo->prepare($update_sql);
+                $update_stmt->bindParam(':new_password', $new_password_hash);
+                $update_stmt->bindParam(':user_id', $user_id);
+                $update_stmt->execute();
 
+                $type = "success";
+                $msg = "Password changed successfully.";
+            } else {
+                // New password and confirm password do not match
+                $msg = "New password and confirm password do not match.";
+                $type = "error";
+            }
         } else {
-            // New password and confirm password do not match
-            $msg = "New password and confirm password do not match.";
+            // Current password does not match
+            $msg = "Current password is incorrect.";
             $type = "error";
-
         }
-    } else {
-        // Current password does not match
-        $msg = "Current password is incorrect.";
-        $type = "error";
-
-    }
+    
 }
 ?>
 <?php

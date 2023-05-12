@@ -2,21 +2,29 @@
 $title = "Item Details";
 ob_start();
 
-// Connect to the database
-$db_host = 'localhost';
-$db_user = 'root';
-$db_pass = '';
-$db_name = 'pharmacy';
-$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-$product_id = $_GET['id'];
-$query = "SELECT * FROM products WHERE id = $product_id";
-$result = mysqli_query($conn, $query);
+include 'connexion.php';
+try {
+    
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $product_id = $_GET['id'];
+    $query = "SELECT * FROM products WHERE id = :product_id";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':product_id', $product_id);
+    $stmt->execute();
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    $pdo=null;
+    
+
+} catch (PDOException $e) {
+    // Handle database connection or query errors
+    echo "An error occurred: " . $e->getMessage();
+}
 
 // Check if the query was successful
-if (mysqli_num_rows($result)>0) {
+if ($stmt->rowCount() > 0) {
 
-  // Close the database connection
-  mysqli_close($conn);
+  $pdo=null;
 } else {
   // If the query failed,
   // Redirect user to 404 not found page
@@ -40,8 +48,8 @@ include 'navbar.php'; ?>
                 </div>                    
             </section>
             <?php 
-            $product = mysqli_fetch_assoc($result);
            
+            
             echo '<section class=" tf-item-detail ">
                 <div class="tf-container">
                    <div class="row">
